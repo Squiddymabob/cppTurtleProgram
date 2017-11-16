@@ -1,0 +1,56 @@
+# simple C makefile
+
+CC=g++
+
+GLUTLIBDIR=/opt/PDmesa/GLUT-3.7/lib
+GLUTINCDIR=/opt/PDmesa/GLUT-3.7/include
+
+GLINCDIR=/opt/PDmesa/Mesa-5.0.1/include
+GLLIBDIR=/opt/PDmesa/Mesa-5.0.1/lib
+#GLINCDIR=/usr/X/include
+#GLLIBDIR=/usr/X/lib
+
+
+GLXLIB = /usr/X11R6/lib
+#GLXLIB = /usr/X11/lib
+#GLXLIB = /usr/X/lib
+
+GLLIB= -lglut -lGLU -lGL -lX11 -lXext -lXmu -lXi -lm
+
+
+shape: shape.o Node.o Command.o Forward.o Jump.o LeftR.o RightR.o Repeat.o Prog.o
+	$(CC) shape.o Node.o Command.o Forward.o Jump.o LeftR.o RightR.o Repeat.o Prog.o -L$(GLLIBDIR) -L$(GLUTLIBDIR) -L$(GLXLIB) $(GLLIB) -o shape
+
+shape.o: shape.cpp
+	 $(CC) -I$(GLINCDIR) -I$(GLUTINCDIR) -c shape.cpp
+
+Node.o: Node.h
+	$(CC) -c Node.cpp
+
+Command.o: Command.cpp Command.h Node.h
+	$(CC) -c Command.cpp
+
+Forward.o: Forward.cpp Forward.h Command.h
+	g++ -c Forward.cpp
+
+Jump.o: Jump.cpp Jump.h Command.h
+	g++ -c Jump.cpp
+
+LeftR.o: LeftR.cpp LeftR.h Command.h
+	g++ -c LeftR.cpp
+
+RightR.o: RightR.cpp RightR.h Command.h
+	g++ -c RightR.cpp
+
+Repeat.o: Repeat.cpp Repeat.h Command.h Command.h
+	g++ -c Repeat.cpp
+
+Prog.o: Prog.cpp Prog.h Node.h Command.h Forward.h Jump.h LeftR.h RightR.h Repeat.h
+	g++ -c Prog.cpp
+
+clean: 
+	/bin/rm -rf $(OBJ) $(PROG)
+
+
+#above is the makefile for making specific objects out of its respective '.h' and '.cpp' files, as shape is the object we 
+#wish to call to open the window then executes the .txt file, it contains all objects 
